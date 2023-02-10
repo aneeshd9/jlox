@@ -14,8 +14,8 @@
 5. Representing code (done)
 6. Parsing expressions (done)
 7. Evaluating expressions (done)
-8. Statements and state (current)
-9. Control flow
+8. Statements and state (done)
+9. Control flow (current)
 10. Functions
 11. Resolving and binding
 12. Classes

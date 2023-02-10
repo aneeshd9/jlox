@@ -1,16 +1,26 @@
 package com.thanazer.lox;
 
+import java.util.List;
+
 import com.thanazer.lox.Expr.Binary;
 import com.thanazer.lox.Expr.Grouping;
 import com.thanazer.lox.Expr.Literal;
 import com.thanazer.lox.Expr.Unary;
+import com.thanazer.lox.Expr.Variable;
+import com.thanazer.lox.Stmt.Expression;
+import com.thanazer.lox.Stmt.Print;
+import com.thanazer.lox.Stmt.Var;
 
-class Interpreter implements Expr.Visitor<Object> {
-  void interpret(Expr expression) {
+class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+  private Environment environment = new Environment();
+
+  void interpret(List<Stmt> statements) {
     try {
-      Object value = evaluate(expression);
-      System.out.println(stringify(value));
+      for (Stmt statement: statements) {
+        execute(statement);
+      }
     } catch (RuntimeError error) {
+      System.out.println("Inside catch of Interpreter.");
       Lox.runtimeError(error);
     }
   }
@@ -39,6 +49,11 @@ class Interpreter implements Expr.Visitor<Object> {
     }
 
     return null;
+  }
+
+  @Override
+  public Object visitVariableExpr(Variable expr) {
+    return environment.get(expr.name);
   }
 
   private void checkNumberOperand(Token operator, Object operand) {
@@ -81,6 +96,34 @@ class Interpreter implements Expr.Visitor<Object> {
 
   private Object evaluate(Expr expr) {
     return expr.accept(this);
+  }
+
+  private void execute(Stmt statement) {
+    statement.accept(this);
+  }
+
+  @Override
+  public Void visitExpressionStmt(Expression stmt) {
+    evaluate(stmt.expression);
+    return null;
+  }
+
+  @Override
+  public Void visitPrintStmt(Print stmt) {
+    Object value = evaluate(stmt.expression);
+    System.out.println(stringify(value));
+    return null;
+  }
+
+  @Override
+  public Void visitVarStmt(Var stmt) {
+    Object value = null;
+    if (stmt.initializer != null) {
+      value = evaluate(stmt.initializer);
+    }
+
+    environment.define(stmt.name.lexeme, value);
+    return null;
   }
 
   @Override

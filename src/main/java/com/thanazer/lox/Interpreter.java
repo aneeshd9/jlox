@@ -8,6 +8,7 @@ import com.thanazer.lox.Expr.Grouping;
 import com.thanazer.lox.Expr.Literal;
 import com.thanazer.lox.Expr.Unary;
 import com.thanazer.lox.Expr.Variable;
+import com.thanazer.lox.Stmt.Block;
 import com.thanazer.lox.Stmt.Expression;
 import com.thanazer.lox.Stmt.Print;
 import com.thanazer.lox.Stmt.Var;
@@ -101,6 +102,25 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
   private void execute(Stmt statement) {
     statement.accept(this);
+  }
+
+  void executeBlock(List<Stmt> statements, Environment environment) {
+    Environment previous = this.environment;
+    try {
+      this.environment = environment;
+
+      for (Stmt statement: statements) {
+        execute(statement);
+      }
+    } finally {
+      this.environment = previous;
+    }
+  }
+
+  @Override
+  public Void visitBlockStmt(Block stmt) {
+    executeBlock(stmt.statements, new Environment(environment));
+    return null;
   }
 
   @Override

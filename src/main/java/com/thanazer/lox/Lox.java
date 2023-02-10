@@ -32,6 +32,7 @@ public class Lox {
   }
 
   private static void runPrompt() throws IOException {
+    //TODO: Add ability to automatically print value after eval if expressions are put into REPL.
     InputStreamReader input = new InputStreamReader(System.in);
     BufferedReader reader = new BufferedReader(input);
 

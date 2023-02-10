@@ -3,11 +3,13 @@
 ## Progress:
 
 <ins>Introductory sections (not in this repo)</ins>
+
 1. Introduction (done)
 2. A map of the territory (done)
 3. The Lox language (done)
 
 <ins>JLox implementation (this repo)</ins>
+
 4. Scanning (done)
 5. Representing code (done)
 6. Parsing expressions (done)

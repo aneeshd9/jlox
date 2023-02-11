@@ -14,6 +14,7 @@ import com.thanazer.lox.Stmt.Expression;
 import com.thanazer.lox.Stmt.If;
 import com.thanazer.lox.Stmt.Print;
 import com.thanazer.lox.Stmt.Var;
+import com.thanazer.lox.Stmt.While;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   private Environment environment = new Environment();
@@ -168,6 +169,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     environment.define(stmt.name.lexeme, value);
+    return null;
+  }
+
+  @Override
+  public Void visitWhileStmt(While stmt) {
+    while (isTruthy(evaluate(stmt.condition))) {
+      execute(stmt.body);
+    }
     return null;
   }
 

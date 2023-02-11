@@ -6,10 +6,12 @@ import com.thanazer.lox.Expr.Assign;
 import com.thanazer.lox.Expr.Binary;
 import com.thanazer.lox.Expr.Grouping;
 import com.thanazer.lox.Expr.Literal;
+import com.thanazer.lox.Expr.Logical;
 import com.thanazer.lox.Expr.Unary;
 import com.thanazer.lox.Expr.Variable;
 import com.thanazer.lox.Stmt.Block;
 import com.thanazer.lox.Stmt.Expression;
+import com.thanazer.lox.Stmt.If;
 import com.thanazer.lox.Stmt.Print;
 import com.thanazer.lox.Stmt.Var;
 
@@ -22,7 +24,6 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         execute(statement);
       }
     } catch (RuntimeError error) {
-      System.out.println("Inside catch of Interpreter.");
       Lox.runtimeError(error);
     }
   }
@@ -30,6 +31,19 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Object visitLiteralExpr(Literal expr) {
     return expr.value;
+  }
+
+  @Override
+  public Object visitLogicalExpr(Logical expr) {
+    Object left = evaluate(expr.left);
+
+    if (expr.operator.type == TokenType.OR) {
+      if (isTruthy(left)) return left;
+    } else {
+      if (!isTruthy(left)) return left;
+    }
+
+    return evaluate(expr.right);
   }
 
   @Override
@@ -43,7 +57,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     switch (expr.operator.type) {
       case BANG:
-        return !isTrusty(right);
+        return !isTruthy(right);
       case MINUS:
         checkNumberOperand(expr.operator, right);
         return -(double) right;
@@ -68,7 +82,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     throw new RuntimeError(operator, "Operands must be numbers.");
   }
 
-  private boolean isTrusty(Object object) {
+  private boolean isTruthy(Object object) {
     if (object == null) return false;
     if (object instanceof Boolean) return (boolean)object;
 
@@ -126,6 +140,16 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
   @Override
   public Void visitExpressionStmt(Expression stmt) {
     evaluate(stmt.expression);
+    return null;
+  }
+
+  @Override
+  public Void visitIfStmt(If stmt) {
+    if (isTruthy(evaluate(stmt.condition))) {
+      execute(stmt.thenBranch);
+    } else if (stmt.elseBranch != null) {
+      execute(stmt.elseBranch);
+    }
     return null;
   }
 

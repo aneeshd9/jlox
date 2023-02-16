@@ -16,8 +16,8 @@
 7. Evaluating expressions (done)
 8. Statements and state (done)
 9. Control flow (done)
-10. Functions (current)
-11. Resolving and binding
+10. Functions (done)
+11. Resolving and binding (current)
 12. Classes
 13. Inheritance
 

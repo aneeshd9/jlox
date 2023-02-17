@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Stack;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
+  //TODO: Extend resolver to report error for unused variables.
+  //TODO: Improve resolver by making it look-up variables by index.
   private final Interpreter interpreter;
   private final Stack<Map<String, Boolean>> scopes = new Stack<>();
   private FunctionType currentFunction = FunctionType.NONE;

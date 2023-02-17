@@ -17,8 +17,8 @@
 8. Statements and state (done)
 9. Control flow (done)
 10. Functions (done)
-11. Resolving and binding (current)
-12. Classes
+11. Resolving and binding (done)
+12. Classes (current)
 13. Inheritance
 
 [Section Link](https://craftinginterpreters.com/a-tree-walk-interpreter.html)

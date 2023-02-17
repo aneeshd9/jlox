@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.thanazer.lox.Stmt.Class;
+
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   //TODO: Extend resolver to report error for unused variables.
   //TODO: Improve resolver by making it look-up variables by index.
@@ -48,6 +50,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     beginScope();
     resolve(stmt.statements);
     endScope();
+    return null;
+  }
+
+  @Override
+  public Void visitClassStmt(Class stmt) {
+    declare(stmt.name);
+    define(stmt.name);
     return null;
   }
 

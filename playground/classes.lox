@@ -12,3 +12,11 @@ print bagel; // Prints "Bagel instance".
 
 bagel.type = "everything";
 print bagel.type;
+
+class Bacon {
+  eat() {
+    print "Crunch crunch crunch!";
+  }
+}
+
+Bacon().eat(); // Prints "Crunch crunch crunch!".

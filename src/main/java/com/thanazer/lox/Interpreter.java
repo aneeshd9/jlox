@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.thanazer.lox.Expr.Get;
 import com.thanazer.lox.Expr.Set;
+import com.thanazer.lox.Expr.This;
 import com.thanazer.lox.Stmt.Class;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
@@ -73,6 +74,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     Object value = evaluate(expr.value);
     ((LoxInstance) object).set(expr.name, value);
     return value;
+  }
+
+  @Override
+  public Object visitThisExpr(This expr) {
+    return lookUpVariable(expr.keyword, expr);
   }
 
   @Override

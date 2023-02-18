@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thanazer.lox.Expr.Get;
+import com.thanazer.lox.Expr.Set;
 import com.thanazer.lox.Stmt.Class;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
@@ -57,6 +59,20 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     return evaluate(expr.right);
+  }
+
+  @Override
+  public Object visitSetExpr(Set expr) {
+    Object object = evaluate(expr.object);
+
+    if (!(object instanceof LoxInstance)) {
+      throw new RuntimeError(expr.name,
+        "Only instances have fields.");
+    }
+
+    Object value = evaluate(expr.value);
+    ((LoxInstance) object).set(expr.name, value);
+    return value;
   }
 
   @Override
@@ -312,5 +328,15 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     return function.call(this, arguments);
+  }
+
+  @Override
+  public Object visitGetExpr(Get expr) {
+    Object object = evaluate(expr.object);
+    if (object instanceof LoxInstance) {
+      return ((LoxInstance) object).get(expr.name);
+    }
+
+    throw new RuntimeError(expr.name, "Only instances have properties.");
   }
 }

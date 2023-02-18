@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.thanazer.lox.Expr.Get;
+import com.thanazer.lox.Expr.Set;
 import com.thanazer.lox.Stmt.Class;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
@@ -141,6 +143,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   }
 
   @Override
+  public Void visitGetExpr(Get expr) {
+    resolve(expr.object);
+    return null;
+  }
+
+  @Override
   public Void visitGroupingExpr(Expr.Grouping expr) {
     resolve(expr.expression);
     return null;
@@ -155,6 +163,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   public Void visitLogicalExpr(Expr.Logical expr) {
     resolve(expr.left);
     resolve(expr.right);
+    return null;
+  }
+
+  @Override
+  public Void visitSetExpr(Set expr) {
+    resolve(expr.value);
+    resolve(expr.object);
     return null;
   }
 

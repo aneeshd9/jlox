@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 class LoxClass implements LoxCallable {
+  //TODO: Add support for getters and setters.
+  //TODO: Add support for static methods.
   final String name;
   private final Map<String, LoxFunction> methods;
 
@@ -28,11 +30,18 @@ class LoxClass implements LoxCallable {
   @Override
   public Object call(Interpreter interpreter, List<Object> arguments) {
     LoxInstance instance = new LoxInstance(this);
+    LoxFunction initializer = findMethod("init");
+    if (initializer != null) {
+      initializer.bind(instance).call(interpreter, arguments);
+    }
+
     return instance;
   }
 
   @Override
   public int arity() {
-    return 0;
+    LoxFunction initializer = findMethod("init");
+    if (initializer == null) return 0;
+    return initializer.arity();
   }
 }

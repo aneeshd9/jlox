@@ -7,16 +7,22 @@ class LoxClass implements LoxCallable {
   //TODO: Add support for getters and setters.
   //TODO: Add support for static methods.
   final String name;
+  final LoxClass superclass;
   private final Map<String, LoxFunction> methods;
 
-  LoxClass(String name, Map<String, LoxFunction> methods) {
+  LoxClass(String name, LoxClass superclass, Map<String, LoxFunction> methods) {
     this.name = name;
     this.methods = methods;
+    this.superclass = superclass;
   }
 
   LoxFunction findMethod(String name) {
     if (methods.containsKey(name)) {
       return methods.get(name);
+    }
+
+    if (superclass != null) {
+      return superclass.findMethod(name);
     }
 
     return null;

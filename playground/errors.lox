@@ -1,5 +1,8 @@
 class Foo {
   init() {
+    super.cook();
     return "something else";
   }
 }
+
+super.close();

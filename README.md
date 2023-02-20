@@ -19,6 +19,8 @@
 10. Functions (done)
 11. Resolving and binding (done)
 12. Classes (done)
-13. Inheritance (current)
+13. Inheritance (done)
 
 [Section Link](https://craftinginterpreters.com/a-tree-walk-interpreter.html)
+
+<ins>CLox implementation [Repo]()</ins>
